@@ -23,7 +23,7 @@ namespace VLCLibTest
         {
             //string pluginPath = Environment.CurrentDirectory + "\\vlc\\plugins\\";  //插件目录
             string plugin_arg = "--plugin-path=" + pluginPath;
-            string[] arguments = {"--demux=h264", "--extraintf=http:logger --verbose=2 --file-logging --logfile=vlc-log.txt", "-I", "dummy", "--ignore-config", "--no-video-title", plugin_arg };
+            string[] arguments = {"--demux=h264", "--extraintf=http:logger"," --verbose=2", "--file-logging", "--logfile=vlc-log.txt", "-I", "dummy", "--ignore-config", "--no-video-title", plugin_arg };
             libvlc_instance_ = LibVlcAPI.libvlc_new(arguments);
 
             libvlc_media_player_ = LibVlcAPI.libvlc_media_player_new(libvlc_instance_);  //创建 libvlc_media_player 播放核心
@@ -46,6 +46,24 @@ namespace VLCLibTest
         /// </summary>
         /// <param name="filePath"></param>
         public void LoadFile(string filePath)
+        {
+            IntPtr libvlc_media = LibVlcAPI.libvlc_media_new_path(libvlc_instance_, filePath);  //创建 libvlc_media_player 播放核心
+            if (libvlc_media != IntPtr.Zero)
+            {
+                LibVlcAPI.libvlc_media_parse(libvlc_media);
+                duration_ = LibVlcAPI.libvlc_media_get_duration(libvlc_media) / 1000.0;  //获取视频时长
+
+                LibVlcAPI.libvlc_media_player_set_media(libvlc_media_player_, libvlc_media);  //将视频绑定到播放器去
+                LibVlcAPI.libvlc_media_release(libvlc_media);
+
+                //LibVlcAPI.libvlc_media_player_play(libvlc_media_player_);  //播放
+            }
+        }
+        /// <summary>
+        /// 播放指定媒体文件
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void LoadURL(string filePath)
         {
             IntPtr libvlc_media = LibVlcAPI.libvlc_media_new_location(libvlc_instance_, filePath);  //创建 libvlc_media_player 播放核心
             if (libvlc_media != IntPtr.Zero)

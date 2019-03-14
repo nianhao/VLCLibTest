@@ -24,7 +24,8 @@ namespace VLCLibTest
             Trace.WriteLine(PLUGIN_PATH);
             player = new VLCBase(PLUGIN_PATH);
             player.SetRenderWindow((int)panel_renderWindow.Handle);
-            player.LoadFile("udp://@192.168.1.117:9090");
+            //player.LoadFile("br.h264");
+            player.LoadURL("udp://@192.168.1.117:9090");
             player.Play();
         }
 
